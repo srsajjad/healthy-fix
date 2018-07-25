@@ -1,11 +1,28 @@
 import React, { Component } from 'react'
-import Button from '@material-ui/core/Button'
+import MenuAppBar from './AppBar'
+import Login from './Login'
+import SignUp from './SignUp'
+import Profile from './Profile'
+import AllMeals from './AllMeals'
+import Method from './Method'
+import { Router, Link } from '@reach/router'
 
 class App extends Component {
+  state = {}
+
+  componentDidMount () {}
+
   render () {
     return (
       <div className='App'>
-        <Button variant="contained" color="secondary">Click Me</Button>
+        <MenuAppBar />
+        <Router>
+          <Login path='/login' />
+          <SignUp path='/signup' />
+          <Profile path='/profile' />
+          <AllMeals path='/allmeals' />
+          <Method path='/method' />
+        </Router>
       </div>
     )
   }

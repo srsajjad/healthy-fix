@@ -7,25 +7,27 @@ let r = require('rethinkdb')
 var jwt = require('jsonwebtoken')
 require('dotenv').config()
 
-app.use(express.static('public'))
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use(bodyParser.json())
+// app.use(express.static('public'))
 app.use(cors())
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 
-let connection = null
+
+let conn = null
 r.connect({ host: 'localhost', port: 28015 }, function (err, conn) {
   if (err) throw err
-  connection = conn
-})
+  conn = conn
+
 
 // sign up
 app.post('/auth/signup', (req, res) => {
+  console.log('this is request body', req.body)
   let { name, password, age, loa } = req.body
-
   r
+    .db('foodplan')
     .table('users')
     .filter({
-      user: user
+      name: name
     })
     .run(conn, async (err, result) => {
       if (err) throw err
@@ -36,9 +38,10 @@ app.post('/auth/signup', (req, res) => {
         })
       } else {
         let response = await r
+          .db('foodplan')
           .table('users')
           .insert({ name, password, age, loa, meals: [] })
-          .run(connection)
+          .run(conn)
 
         console.log('sign up response', response)
 
@@ -58,6 +61,7 @@ app.post('/auth/login', (req, res) => {
   let decoded = jwt.verify(token, process.env.SECRET_KEY)
   let { name, password } = decoded
   r
+    .db('foodplan')
     .table('users')
     .filter({
       user: name,
@@ -96,6 +100,7 @@ app.post('/me/update', (req, res) => {
   let { name, password, age, loa } = req.body
 
   r
+    .db('foodplan')
     .table('users')
     .filter({
       user: name
@@ -105,6 +110,7 @@ app.post('/me/update', (req, res) => {
       if (result) {
         console.log('result', result)
         r
+          .db('foodplan')
           .table('users')
           .get(result.id)
           .update({ name, password, age, loa })
@@ -123,6 +129,7 @@ app.post('/me/update', (req, res) => {
 app.post('/mealplan/subscribe', (req, res) => {
   let { mealId, meal, name } = req.body
   r
+    .db('foodplan')
     .table('users')
     .filter({
       user: name
@@ -132,6 +139,7 @@ app.post('/mealplan/subscribe', (req, res) => {
       if (result) {
         console.log('result', result)
         r
+          .db('foodplan')
           .table('users')
           .get(result.id)
           .update({ meals: [...result.meals, { mealId, meal }] })
@@ -150,6 +158,7 @@ app.post('/mealplan/subscribe', (req, res) => {
 app.post('/mealplan/unsubscribe', (req, res) => {
   let { mealId, name } = req.body
   r
+    .db('foodplan')
     .table('users')
     .filter({
       user: name
@@ -159,6 +168,7 @@ app.post('/mealplan/unsubscribe', (req, res) => {
       if (result) {
         console.log('result', result)
         r
+          .db('foodplan')
           .table('users')
           .get(result.id)
           .update({ meals: result.meals.filter(n => n.mealId !== mealId) })
@@ -176,7 +186,7 @@ app.post('/mealplan/unsubscribe', (req, res) => {
 // meal plan recipes
 app.get('/mealplan/recipe/:mealId', (req, res) => {
   let mealId = req.params.mealId
-  r.table('meals').run(conn, (err, result) => {
+  r.db('foodplan').table('meals').run(conn, (err, result) => {
     if (err) throw err
     if (result) {
       let obj = result.meals.filter(n => n.mealId === mealId)
@@ -193,7 +203,7 @@ app.get('/mealplan/recipe/:mealId', (req, res) => {
 
 // meal plan categories
 app.get('/mealplan/categories', (req, res) => {
-  r.table('meals').run(conn, (err, result) => {
+  r.db('foodplan').table('meals').run(conn, (err, result) => {
     if (err) throw err
     if (result) {
       res.json({
@@ -206,6 +216,8 @@ app.get('/mealplan/categories', (req, res) => {
       res.json({ status: 'failed', message: 'data not found' })
     }
   })
+})
+
 })
 
 app.listen(1337, () => console.log('listening to the port 1337'))
