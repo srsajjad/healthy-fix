@@ -1,0 +1,39 @@
+2018-07-25T21:33:28.475719657 0.463091s notice: Recursively removing directory /home/sajjad/Desktop/food-plan/rethinkdb_data/tmp
+2018-07-25T21:33:28.524079891 0.511451s notice: Initializing directory /home/sajjad/Desktop/food-plan/rethinkdb_data
+2018-07-25T21:33:28.524180225 0.511552s info: Creating a default database for your convenience. (This is because you ran 'rethinkdb' without 'create', 'serve', or '--join', and the directory '/home/sajjad/Desktop/food-plan/rethinkdb_data' did not already exist or is empty.)
+2018-07-25T21:33:28.524222724 0.511594s notice: Running rethinkdb 2.3.6 (GCC 7.2.1)...
+2018-07-25T21:33:28.530861548 0.518235s notice: Running on Linux 4.9.77-1-MANJARO x86_64
+2018-07-25T21:33:28.530953595 0.518325s notice: Loading data from directory /home/sajjad/Desktop/food-plan/rethinkdb_data
+2018-07-25T21:33:28.868105640 0.855477s info: Automatically using cache size of 100 MB
+2018-07-25T21:33:28.868893720 0.856265s warn: Cache size does not leave much memory for server and query overhead (available memory: 1082 MB).
+2018-07-25T21:33:28.868899375 0.856270s warn: Cache size is very low and may impact performance.
+2018-07-25T21:33:28.913617608 0.900989s notice: Listening for intracluster connections on port 29015
+2018-07-25T21:33:28.930924900 0.918296s notice: Listening for client driver connections on port 28015
+2018-07-25T21:33:28.931088154 0.918459s notice: Listening for administrative HTTP connections on port 8080
+2018-07-25T21:33:28.931092590 0.918463s notice: Listening on cluster addresses: 127.0.0.1, 127.0.1.1, ::1
+2018-07-25T21:33:28.931101269 0.918472s notice: Listening on driver addresses: 127.0.0.1, 127.0.1.1, ::1
+2018-07-25T21:33:28.931104746 0.918476s notice: Listening on http addresses: 127.0.0.1, 127.0.1.1, ::1
+2018-07-25T21:33:28.931109932 0.918481s notice: To fully expose RethinkDB on the network, bind to all addresses by running rethinkdb with the `--bind all` command line option.
+2018-07-25T21:33:28.931114927 0.918486s notice: Server ready, "sajjad_pc_evc" 8ff7405d-b43b-4683-829f-c15a11cb4cf5
+2018-07-25T21:40:49.179650305 441.167021s info: Table 26b4e391-9031-4c63-a895-8354079b38f6: Starting a new Raft election for term 1.
+2018-07-25T21:40:49.186229409 441.173601s info: Table 26b4e391-9031-4c63-a895-8354079b38f6: Added replica on this server.
+2018-07-25T21:40:49.245176680 441.232548s info: Table 26b4e391-9031-4c63-a895-8354079b38f6: This server is Raft leader for term 1. Latest log index is 0.
+2018-07-26T00:53:05.046870313 11977.034242s notice: Server got SIGINT from pid 0, uid 0; shutting down...
+2018-07-26T00:53:05.085909296 11977.073281s notice: Shutting down client connections...
+2018-07-26T00:53:05.086837746 11977.074209s notice: All client connections closed.
+2018-07-26T00:53:05.086863618 11977.074235s notice: Shutting down storage engine... (This may take a while if you had a lot of unflushed data in the writeback cache.)
+2018-07-26T00:53:05.198344233 11977.185716s notice: Storage engine shut down.
+2018-07-26T09:17:26.040096451 0.178375s notice: Running rethinkdb 2.3.6 (GCC 7.2.1)...
+2018-07-26T09:17:26.075007975 0.213299s notice: Running on Linux 4.9.77-1-MANJARO x86_64
+2018-07-26T09:17:26.075233826 0.213512s notice: Loading data from directory /home/sajjad/Desktop/food-plan/rethinkdb_data
+2018-07-26T09:17:26.320874739 0.459153s info: Automatically using cache size of 383 MB
+2018-07-26T09:17:26.353049495 0.491329s notice: Listening for intracluster connections on port 29015
+2018-07-26T09:17:26.599312837 0.737594s notice: Listening for client driver connections on port 28015
+2018-07-26T09:17:26.603029095 0.741309s notice: Listening for administrative HTTP connections on port 8080
+2018-07-26T09:17:26.603047731 0.741326s notice: Listening on cluster addresses: 127.0.0.1, 127.0.1.1, ::1
+2018-07-26T09:17:26.603055451 0.741334s notice: Listening on driver addresses: 127.0.0.1, 127.0.1.1, ::1
+2018-07-26T09:17:26.603066558 0.741345s notice: Listening on http addresses: 127.0.0.1, 127.0.1.1, ::1
+2018-07-26T09:17:26.603120937 0.741399s notice: To fully expose RethinkDB on the network, bind to all addresses by running rethinkdb with the `--bind all` command line option.
+2018-07-26T09:17:26.603131680 0.741411s notice: Server ready, "sajjad_pc_evc" 8ff7405d-b43b-4683-829f-c15a11cb4cf5
+2018-07-26T09:17:27.874486568 2.012765s info: Table 26b4e391-9031-4c63-a895-8354079b38f6: Starting a new Raft election for term 2.
+2018-07-26T09:17:27.946397606 2.084676s info: Table 26b4e391-9031-4c63-a895-8354079b38f6: This server is Raft leader for term 2. Latest log index is 2.
