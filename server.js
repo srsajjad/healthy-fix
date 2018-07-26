@@ -60,6 +60,7 @@ r.connect({ host: 'localhost', port: 28015 }, function (err, conn) {
     if (!token) {
       name = req.body.name
       password = req.body.password
+      token = jwt.sign({ name, password }, process.env.SECRET_KEY)
     } else {
       let decoded = jwt.verify(token, process.env.SECRET_KEY)
       name = decoded.name
@@ -77,7 +78,11 @@ r.connect({ host: 'localhost', port: 28015 }, function (err, conn) {
         if (err) throw err
         let result = await cursor.toArray()
         if (result[0] && result[0].name && result[0].password) {
-          res.json({ status: 'success', message: 'successfully logged in' })
+          res.json({
+            status: 'success',
+            message: 'successfully logged in',
+            token
+          })
         } else {
           if (req.body.name && req.body.password) {
             r
@@ -91,9 +96,14 @@ r.connect({ host: 'localhost', port: 28015 }, function (err, conn) {
                 if (err) throw err
                 let result = await cursor.toArray()
                 if (result[0] && result[0].name && result[0].password) {
+                  let token = jwt.sign(
+                    { name: result[0].name, password: result[0].password },
+                    process.env.SECRET_KEY
+                  )
                   res.json({
                     status: 'success',
-                    message: 'successfully logged in'
+                    message: 'successfully logged in',
+                    token
                   })
                 } else {
                   res.json({ status: 'failed', message: 'wrong credentials' })
@@ -107,18 +117,28 @@ r.connect({ host: 'localhost', port: 28015 }, function (err, conn) {
   })
 
   // profile
-  app.get('/profile/:name', (req, res) => {
-    let { name } = req.params
+  app.get('/profile', (req, res) => {
+    let token, name
+    req.get('Authorization')
+      ? (token = req.get('Authorization').split(' ')[1])
+      : null
+
+    let decoded = jwt.verify(token, process.env.SECRET_KEY)
+    name = decoded.name
     console.log('name', name)
+
     r
+      .db('foodplan')
       .table('users')
       .filter({
-        user: name
+        name: name
       })
-      .run(conn, (err, result) => {
+      .run(conn, async (err, cursor) => {
         if (err) throw err
-        if (result) {
-          res.json({ status: 'success', userInfo: result })
+        let result = await cursor.toArray()
+        console.log('result', result)
+        if (result[0]) {
+          res.json({ status: 'success', userInfo: result[0] })
         } else {
           res.json({ status: 'failed', message: 'not found' })
         }
@@ -127,32 +147,67 @@ r.connect({ host: 'localhost', port: 28015 }, function (err, conn) {
 
   // profile update
   app.post('/me/update', (req, res) => {
+    let token
     let { name, password, age, loa } = req.body
 
-    r
-      .db('foodplan')
-      .table('users')
-      .filter({
-        user: name
-      })
-      .run(conn, async (err, result) => {
-        if (err) throw err
-        if (result) {
-          console.log('result', result)
-          r
-            .db('foodplan')
-            .table('users')
-            .get(result.id)
-            .update({ name, password, age, loa })
-            .run(conn, (err, result) => {
-              if (err) throw err
-              res.json({
-                status: 'success',
-                message: 'updated successfully'
-              })
+    req.get('Authorization')
+      ? (token = req.get('Authorization').split(' ')[1])
+      : null
+
+    let decoded = jwt.verify(token, process.env.SECRET_KEY)
+    let prevName = decoded.name
+
+    if (prevName !== name) {
+      r
+        .db('foodplan')
+        .table('users')
+        .filter({
+          name: name
+        })
+        .run(conn, async (err, cursor) => {
+          if (err) throw err
+          let result = await cursor.toArray()
+          if (result[0] && result[0].name === name) {
+            res.json({
+              status: 'failed',
+              message: 'this user name is already taken'
             })
-        }
-      })
+          } else {
+            updateDB()
+          }
+        })
+    } else {
+      updateDB()
+    }
+
+    function updateDB () {
+      r
+        .db('foodplan')
+        .table('users')
+        .filter({
+          name: prevName
+        })
+        .run(conn, async (err, cursor) => {
+          if (err) throw err
+          let result = await cursor.toArray()
+          if (result[0]) {
+            let id = result[0].id
+            r
+              .db('foodplan')
+              .table('users')
+              .get(id)
+              .update({ name, password, age, loa })
+              .run(conn, (err, result) => {
+                if (err) throw err
+                console.log('after updating result')
+                res.json({
+                  status: 'success',
+                  message: 'updated successfully'
+                })
+              })
+          }
+        })
+    }
   })
 
   // subscribe to meal plan

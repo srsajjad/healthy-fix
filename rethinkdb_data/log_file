@@ -37,3 +37,5 @@
 2018-07-26T09:17:26.603131680 0.741411s notice: Server ready, "sajjad_pc_evc" 8ff7405d-b43b-4683-829f-c15a11cb4cf5
 2018-07-26T09:17:27.874486568 2.012765s info: Table 26b4e391-9031-4c63-a895-8354079b38f6: Starting a new Raft election for term 2.
 2018-07-26T09:17:27.946397606 2.084676s info: Table 26b4e391-9031-4c63-a895-8354079b38f6: This server is Raft leader for term 2. Latest log index is 2.
+2018-07-26T11:23:26.692430855 7560.830710s warn: Some RethinkDB data on this server has been placed into swap memory. This may impact performance.
+2018-07-26T13:53:21.361379458 16555.499658s notice: Someone asked for the nonwhitelisted file "/robots.txt".  If this should be accessible, add it to the static web assets.
