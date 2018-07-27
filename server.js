@@ -136,7 +136,7 @@ r.connect({ host: 'localhost', port: 28015 }, function (err, conn) {
       .run(conn, async (err, cursor) => {
         if (err) throw err
         let result = await cursor.toArray()
-        console.log('result', result)
+        // console.log('result', result)
         if (result[0]) {
           res.json({ status: 'success', userInfo: result[0] })
         } else {
@@ -212,22 +212,31 @@ r.connect({ host: 'localhost', port: 28015 }, function (err, conn) {
 
   // subscribe to meal plan
   app.post('/mealplan/subscribe', (req, res) => {
-    let { mealId, meal, name } = req.body
+    let token
+    let { meal } = req.body
+
+    req.get('Authorization')
+      ? (token = req.get('Authorization').split(' ')[1])
+      : null
+
+    let decoded = jwt.verify(token, process.env.SECRET_KEY)
+    let name = decoded.name
+
     r
       .db('foodplan')
       .table('users')
       .filter({
-        user: name
+        name: name
       })
-      .run(conn, async (err, result) => {
+      .run(conn, async (err, cursor) => {
         if (err) throw err
-        if (result) {
-          console.log('result', result)
+        let result = await cursor.toArray()
+        if (result[0]) {
           r
             .db('foodplan')
             .table('users')
-            .get(result.id)
-            .update({ meals: [...result.meals, { mealId, meal }] })
+            .get(result[0].id)
+            .update({ meals: Array.from(new Set([...result[0].meals, meal])) })
             .run(conn, (err, result) => {
               if (err) throw err
               res.json({
@@ -241,22 +250,35 @@ r.connect({ host: 'localhost', port: 28015 }, function (err, conn) {
 
   // unsubscribe  meal plans
   app.post('/mealplan/unsubscribe', (req, res) => {
-    let { mealId, name } = req.body
+    let token
+    let { meal } = req.body
+
+    req.get('Authorization')
+      ? (token = req.get('Authorization').split(' ')[1])
+      : null
+
+    let decoded = jwt.verify(token, process.env.SECRET_KEY)
+    let name = decoded.name
+
     r
       .db('foodplan')
       .table('users')
       .filter({
-        user: name
+        name: name
       })
-      .run(conn, async (err, result) => {
+      .run(conn, async (err, cursor) => {
         if (err) throw err
-        if (result) {
-          console.log('result', result)
+        let result = await cursor.toArray()
+        if (result[0]) {
           r
             .db('foodplan')
             .table('users')
-            .get(result.id)
-            .update({ meals: result.meals.filter(n => n.mealId !== mealId) })
+            .get(result[0].id)
+            .update({
+              meals: Array.from(
+                new Set(result[0].meals.filter(n => n !== meal))
+              )
+            })
             .run(conn, (err, result) => {
               if (err) throw err
               res.json({
@@ -269,13 +291,17 @@ r.connect({ host: 'localhost', port: 28015 }, function (err, conn) {
   })
 
   // meal plan recipes
-  app.get('/mealplan/recipe/:mealId', (req, res) => {
-    let mealId = req.params.mealId
-    r.db('foodplan').table('meals').run(conn, (err, result) => {
+  app.get('/mealplan/recipe/:meal', (req, res) => {
+    let meal = req.params.meal
+    console.log(meal)
+    r.db('foodplan').table('meals').run(conn, async (err, cursor) => {
       if (err) throw err
-      if (result) {
-        let obj = result.meals.filter(n => n.mealId === mealId)
-        let recipe = obj.recipes
+      let result = await cursor.toArray()
+      console.log('result', result)
+      if (result[0]) {
+        let fltr = result.filter(n => n.meal === meal)
+        console.log(fltr)
+        let recipe = fltr[0].recipes
         res.json({
           status: 'success',
           recipe
@@ -287,15 +313,14 @@ r.connect({ host: 'localhost', port: 28015 }, function (err, conn) {
   })
 
   // meal plan categories
-  app.get('/mealplan/categories', (req, res) => {
-    r.db('foodplan').table('meals').run(conn, (err, result) => {
+  app.get('/mealplan/meals', (req, res) => {
+    r.db('foodplan').table('meals').run(conn, async (err, cursor) => {
       if (err) throw err
-      if (result) {
+      let result = await cursor.toArray()
+      if (result[0]) {
         res.json({
           status: 'success',
-          meals: result.meals.map(n => {
-            n.mealId, n.meal
-          })
+          meals: result.map(n => n.meal)
         })
       } else {
         res.json({ status: 'failed', message: 'data not found' })
@@ -306,44 +331,13 @@ r.connect({ host: 'localhost', port: 28015 }, function (err, conn) {
 
 app.listen(1337, () => console.log('listening to the port 1337'))
 
-// notes
-// get requests don't have req.body
-
-// meals = [
+// [
 //   {
-//     mealId: 1,
 //     meal: 'Intermittent Fasting',
-//     recipes: [
-//       {
-//         rName: 'water',
-//         ingredients: ['water', 'glass']
-//       },
-//       {
-//         rName: 'cigarette',
-//         ingredients: ['nicotine', 'paper']
-//       },
-//       {
-//         rName: 'tea',
-//         ingredients: ['water', 'tea', 'milk']
-//       }
-//     ]
+//     recipe:  'Dont eat anything till the noon'
 //   },
 //   {
-//     mealId: 2,
 //     meal: 'Just Juice',
-//     recipes: [
-//       {
-//         rName: 'mango juice',
-//         ingredients: ['water', 'mango']
-//       },
-//       {
-//         rName: 'lassi',
-//         ingredients: ['cart', 'sirup']
-//       },
-//       {
-//         rName: 'beer',
-//         ingredients: ['water', 'alchohol']
-//       }
-//     ]
+//     recipes: 'Drink juice only'
 //   }
 // ]
