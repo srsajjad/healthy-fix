@@ -4,15 +4,54 @@ import './Profile.css'
 
 class Profile extends Component {
   // whole state of the app
-  state = {}
+  state = {
+    userInfo: {}
+  }
 
   // handler functions
 
-  componentDidMount () {
-    // api calls on first load
+  // componentDidMount () {
+  //   let token = localStorage.getItem('token')
+
+  //   window
+  //     .fetch('http://localhost:1337/profile', {
+  //       method: 'GET',
+  //       headers: {
+  //         Accept: 'application/json, text/plain, */*',
+  //         'Content-Type': 'application/json',
+  //         Authorization: 'JWT ' + token
+  //       }
+  //     })
+  //     .then(res => res.json())
+  //     .then(res => {
+  //       if (res.status === 'failed') {
+  //         alert(res.message)
+  //       } else if (res.status === 'success') {
+  //         console.dir(this.state)
+  //         this.setState({
+  //           userInfo: res.userInfo
+  //         })
+  //         this.props.renderAgain(res.userInfo)
+  //       }
+  //     })
+  // }
+
+  // getSnapshotBeforeUpdate = (props, prevState) => {
+  //   console.log('prev props', props)
+  //   return {
+  //     userInfo: props.userInfo
+  //   }
+  // }
+
+  componentWillReceiveProps (nextProps) {
+    // console.log('next props', nextProps)
+    this.setState({
+      userInfo: nextProps.userInfo
+    })
   }
 
   render () {
+    // console.log('state of profile', this.state)
     return (
       <div>
         <aside class='profile-card'>
@@ -26,15 +65,15 @@ class Profile extends Component {
             </a>
 
             <h1>
-              Arafat Wasi
+              {this.state.userInfo.name}
             </h1>
 
             <h2>
-              25 Years Old
+              Age: {this.state.userInfo.age}
             </h2>
 
             <h2>
-              7 / 10
+              Level Of Activity: {this.state.userInfo.loa} / 10
             </h2>
 
           </div>

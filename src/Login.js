@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
@@ -27,54 +27,108 @@ const styles = {
   }
 }
 
-function Login (props) {
-  const { classes } = props
+class Login extends PureComponent {
+  state = {
+    name: '',
+    password: ''
+  }
 
-  return (
-    <div>
-      <Card
-        className={classes.card}
-        style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: '40%'
-        }}
-      >
-        <CardContent style={{ display: 'flex', flexDirection: 'column' }}>
+  handleClick = () => {
+    let self = this
+    if (
+      this.state.name.trim().length > 4 &&
+      this.state.password.trim().length > 4
+    ) {
+      console.log('Alright !')
 
-          <TextField
-            label='User Name'
-            className={classes.textField}
-            type='text'
-            autoComplete='current-password'
-            margin='normal'
-          />
+      window
+        .fetch('http://localhost:1337/auth/login', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            name: this.state.name,
+            password: this.state.password
+          })
+        })
+        .then(res => res.json())
+        .then(res => {
+          // console.dir(res)
+          if (res.status === 'failed') {
+            alert(res.message)
+          } else if (res.status === 'success') {
+            localStorage.setItem('token', res.token)
+            this.props.renderAgain()
+          }
+        })
+    } else {
+      alert('name and password can not be empty or less than 4 characters')
+    }
+  }
 
-          <TextField
-            label='Password'
-            className={classes.textField}
-            type='password'
-            autoComplete='current-password'
-            margin='normal'
-            color='secondary'
-          />
+  render () {
+    const { classes, navigate } = this.props
 
-          <Button
-            style={{ width: '200px', margin: 'auto', marginTop: '25px' }}
-            variant='outlined'
-            color='secondary'
-            className={classes.button}
-          >
-            Login
-          </Button>
+    return (
+      <div>
+        <Card
+          className={classes.card}
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '40%',
+            borderRadius: '11px'
+          }}
+        >
+          <CardContent style={{ display: 'flex', flexDirection: 'column' }}>
 
-        </CardContent>
+            <TextField
+              label='User Name'
+              className={classes.textField}
+              type='text'
+              autoComplete='current-password'
+              margin='normal'
+              onChange={e => {
+                this.setState({
+                  name: e.target.value
+                })
+              }}
+            />
 
-      </Card>
-    </div>
-  )
+            <TextField
+              label='Password'
+              className={classes.textField}
+              type='password'
+              autoComplete='current-password'
+              margin='normal'
+              color='secondary'
+              onChange={e => {
+                this.setState({
+                  password: e.target.value
+                })
+              }}
+            />
+
+            <Button
+              style={{ width: '200px', margin: 'auto', marginTop: '25px' }}
+              variant='outlined'
+              color='secondary'
+              className={classes.button}
+              onClick={this.handleClick}
+            >
+              Login
+            </Button>
+
+          </CardContent>
+
+        </Card>
+      </div>
+    )
+  }
 }
 
 export default withStyles(styles)(Login)

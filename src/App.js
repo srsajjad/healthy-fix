@@ -8,21 +8,66 @@ import Method from './Method'
 import { Router, Link } from '@reach/router'
 
 class App extends Component {
-  state = {}
+  state = { userInfo: {} }
 
-  componentDidMount () {}
+  componentDidMount () {
+    let token = localStorage.getItem('token')
+    // console.log('token', token)
+    window
+      .fetch('http://localhost:1337/profile', {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json, text/plain, */*',
+          'Content-Type': 'application/json',
+          Authorization: 'JWT ' + token
+        }
+      })
+      .then(res => res.json())
+      .then(res => {
+        // console.dir(res)
+        if (res.status === 'failed') {
+          alert(res.message)
+        } else if (res.status === 'success') {
+          // console.log('response status', res.status)
+          this.setState({
+            userInfo: res.userInfo
+          })
+        }
+      })
+  }
 
   render () {
+    // console.log('final state',this.state)
     return (
       <div className='App'>
         <MenuAppBar />
-        <Router>
-          <Login path='/login' />
-          <SignUp path='/signup' />
-          <Profile path='/profile' />
-          <AllMeals path='/allmeals' />
-          <Method path='/method' />
-        </Router>
+
+        {window.localStorage.getItem('token')
+          ? <Router>
+            <SignUp
+              topic='update'
+              path='/update'
+              userInfo={this.state.userInfo}
+              renderAgain={() => this.forceUpdate()}
+              />
+            <Profile
+              path='/profile'
+              userInfo={this.state.userInfo}
+              />
+            <AllMeals path='/allmeals' />
+            <Method path='/method' />
+            <AllMeals path='/' />
+          </Router>
+          : <Router>
+            <SignUp
+              topic='signup'
+              path='/signup'
+              renderAgain={() => this.forceUpdate()}
+              />
+            <Login path='/login' renderAgain={() => this.forceUpdate()} />
+            <Login path='/' renderAgain={() => this.forceUpdate()} />
+          </Router>}
+
       </div>
     )
   }

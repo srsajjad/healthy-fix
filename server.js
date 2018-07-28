@@ -53,6 +53,7 @@ r.connect({ host: 'localhost', port: 28015 }, function (err, conn) {
 
   // log in
   app.post('/auth/login', (req, res) => {
+    console.log('login flow was hit')
     let token, name, password
     req.get('Authorization')
       ? (token = req.get('Authorization').split(' ')[1])
@@ -66,6 +67,9 @@ r.connect({ host: 'localhost', port: 28015 }, function (err, conn) {
       name = decoded.name
       password = decoded.password
     }
+    console.log('name', name)
+    console.log('password', password)
+    console.log('token', token)
 
     r
       .db('foodplan')
@@ -77,6 +81,7 @@ r.connect({ host: 'localhost', port: 28015 }, function (err, conn) {
       .run(conn, async (err, cursor) => {
         if (err) throw err
         let result = await cursor.toArray()
+        console.log('result', result[0])
         if (result[0] && result[0].name && result[0].password) {
           res.json({
             status: 'success',
@@ -200,9 +205,11 @@ r.connect({ host: 'localhost', port: 28015 }, function (err, conn) {
               .run(conn, (err, result) => {
                 if (err) throw err
                 console.log('after updating result')
+                let token = jwt.sign({ name, password }, process.env.SECRET_KEY)
                 res.json({
                   status: 'success',
-                  message: 'updated successfully'
+                  message: 'updated successfully',
+                  token: token
                 })
               })
           }

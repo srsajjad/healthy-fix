@@ -82,3 +82,40 @@
 2018-07-27T10:44:57.359389655 8203.131521s notice: All client connections closed.
 2018-07-27T10:44:57.359396547 8203.131528s notice: Shutting down storage engine... (This may take a while if you had a lot of unflushed data in the writeback cache.)
 2018-07-27T10:45:02.414213615 8208.186345s notice: Storage engine shut down.
+2018-07-28T01:16:09.171308200 0.300556s notice: Running rethinkdb 2.3.6 (GCC 7.2.1)...
+2018-07-28T01:16:09.215251262 0.344502s notice: Running on Linux 4.9.77-1-MANJARO x86_64
+2018-07-28T01:16:09.215369553 0.344618s notice: Loading data from directory /home/sajjad/Desktop/food-plan/rethinkdb_data
+2018-07-28T01:16:09.530917861 0.660167s info: Automatically using cache size of 100 MB
+2018-07-28T01:16:09.539864831 0.669113s warn: Cache size does not leave much memory for server and query overhead (available memory: 659 MB).
+2018-07-28T01:16:09.539873312 0.669122s warn: Cache size is very low and may impact performance.
+2018-07-28T01:16:09.583041759 0.712290s notice: Listening for intracluster connections on port 29015
+2018-07-28T01:16:10.019954454 1.149203s notice: Listening for client driver connections on port 28015
+2018-07-28T01:16:10.020590505 1.149839s notice: Listening for administrative HTTP connections on port 8080
+2018-07-28T01:16:10.020603783 1.149852s notice: Listening on cluster addresses: 127.0.0.1, 127.0.1.1, ::1
+2018-07-28T01:16:10.020612816 1.149861s notice: Listening on driver addresses: 127.0.0.1, 127.0.1.1, ::1
+2018-07-28T01:16:10.020632235 1.149880s notice: Listening on http addresses: 127.0.0.1, 127.0.1.1, ::1
+2018-07-28T01:16:10.020653973 1.149902s notice: To fully expose RethinkDB on the network, bind to all addresses by running rethinkdb with the `--bind all` command line option.
+2018-07-28T01:16:10.020668616 1.149918s notice: Server ready, "sajjad_pc_evc" 8ff7405d-b43b-4683-829f-c15a11cb4cf5
+2018-07-28T01:16:11.090935930 2.220184s info: Table 990938ff-9d75-4978-ba18-8a52e78383dc: Starting a new Raft election for term 2.
+2018-07-28T01:16:11.231699783 2.360948s info: Table 990938ff-9d75-4978-ba18-8a52e78383dc: This server is Raft leader for term 2. Latest log index is 2.
+2018-07-28T01:16:11.259463865 2.388712s info: Table 26b4e391-9031-4c63-a895-8354079b38f6: Starting a new Raft election for term 5.
+2018-07-28T01:16:11.376019117 2.505267s info: Table 26b4e391-9031-4c63-a895-8354079b38f6: This server is Raft leader for term 5. Latest log index is 13.
+2018-07-28T14:22:47.384727540 1.077736s notice: Running rethinkdb 2.3.6 (GCC 7.2.1)...
+2018-07-28T14:22:47.423106621 1.116118s notice: Running on Linux 4.9.77-1-MANJARO x86_64
+2018-07-28T14:22:47.423195833 1.116204s notice: Loading data from directory /home/sajjad/Desktop/food-plan/rethinkdb_data
+2018-07-28T14:22:47.762050499 1.455059s info: Automatically using cache size of 100 MB
+2018-07-28T14:22:47.775010369 1.468019s warn: Cache size does not leave much memory for server and query overhead (available memory: 614 MB).
+2018-07-28T14:22:47.775014260 1.468022s warn: Cache size is very low and may impact performance.
+2018-07-28T14:22:47.818283371 1.511292s notice: Listening for intracluster connections on port 29015
+2018-07-28T14:22:48.044381630 1.737390s notice: Listening for client driver connections on port 28015
+2018-07-28T14:22:48.044589760 1.737598s notice: Listening for administrative HTTP connections on port 8080
+2018-07-28T14:22:48.044593000 1.737601s notice: Listening on cluster addresses: 127.0.0.1, 127.0.1.1, ::1
+2018-07-28T14:22:48.044595611 1.737604s notice: Listening on driver addresses: 127.0.0.1, 127.0.1.1, ::1
+2018-07-28T14:22:48.044598462 1.737607s notice: Listening on http addresses: 127.0.0.1, 127.0.1.1, ::1
+2018-07-28T14:22:48.044614837 1.737623s notice: To fully expose RethinkDB on the network, bind to all addresses by running rethinkdb with the `--bind all` command line option.
+2018-07-28T14:22:48.044621075 1.737629s notice: Server ready, "sajjad_pc_evc" 8ff7405d-b43b-4683-829f-c15a11cb4cf5
+2018-07-28T14:22:49.471419799 3.164430s info: Table 990938ff-9d75-4978-ba18-8a52e78383dc: Starting a new Raft election for term 3.
+2018-07-28T14:22:49.534376737 3.227387s info: Table 990938ff-9d75-4978-ba18-8a52e78383dc: This server is Raft leader for term 3. Latest log index is 5.
+2018-07-28T14:22:49.974338750 3.667347s info: Table 26b4e391-9031-4c63-a895-8354079b38f6: Starting a new Raft election for term 6.
+2018-07-28T14:22:50.077178641 3.770187s info: Table 26b4e391-9031-4c63-a895-8354079b38f6: This server is Raft leader for term 6. Latest log index is 16.
+2018-07-28T16:30:48.067276049 7681.760285s warn: Some RethinkDB data on this server has been placed into swap memory. This may impact performance.
