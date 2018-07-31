@@ -229,6 +229,10 @@ r.connect({ host: 'localhost', port: 28015 }, function (err, conn) {
     let decoded = jwt.verify(token, process.env.SECRET_KEY)
     let name = decoded.name
 
+    console.log('name', name)
+    console.log('meal', meal)
+    console.log('token', token)
+
     r
       .db('foodplan')
       .table('users')
@@ -251,6 +255,11 @@ r.connect({ host: 'localhost', port: 28015 }, function (err, conn) {
                 message: 'subscribed to mealplan successfully'
               })
             })
+        } else {
+          res.json({
+            status: 'failed',
+            message: 'Could Not Subscribe'
+          })
         }
       })
   })
@@ -293,6 +302,11 @@ r.connect({ host: 'localhost', port: 28015 }, function (err, conn) {
                 message: 'unsubscribed to mealplan successfully'
               })
             })
+        }else {
+          res.json({
+            status: 'failed',
+            message: 'Could Not Unsubscribe'
+          })
         }
       })
   })
@@ -307,7 +321,7 @@ r.connect({ host: 'localhost', port: 28015 }, function (err, conn) {
       console.log('result', result)
       if (result[0]) {
         let fltr = result.filter(n => n.meal === meal)
-        console.log(fltr)
+        // console.log(fltr)
         let recipe = fltr[0].recipes
         res.json({
           status: 'success',
@@ -319,7 +333,7 @@ r.connect({ host: 'localhost', port: 28015 }, function (err, conn) {
     })
   })
 
-  // meal plan categories
+  // all meal plans
   app.get('/mealplan/meals', (req, res) => {
     r.db('foodplan').table('meals').run(conn, async (err, cursor) => {
       if (err) throw err
@@ -327,7 +341,7 @@ r.connect({ host: 'localhost', port: 28015 }, function (err, conn) {
       if (result[0]) {
         res.json({
           status: 'success',
-          meals: result.map(n => n.meal)
+          meals: result.map(n => n)
         })
       } else {
         res.json({ status: 'failed', message: 'data not found' })

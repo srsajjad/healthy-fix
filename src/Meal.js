@@ -16,6 +16,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite'
 import ShareIcon from '@material-ui/icons/Share'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
+import Subscribe from './Subscribe'
 import './AllMeals.css'
 
 const styles = theme => ({
@@ -52,8 +53,8 @@ class Meal extends React.Component {
   }
 
   render () {
-    const { classes } = this.props
-
+    const { classes, meal, navigate } = this.props
+    // console.dir(this.props)
     return (
       <div className='card-listy'>
         <Card className={classes.card}>
@@ -65,13 +66,16 @@ class Meal extends React.Component {
             }
             action={
               <IconButton>
-                <MoreVertIcon />
+                <MoreVertIcon
+                  onClick={() => {
+                    navigate('/method')
+                  }}
+                />
               </IconButton>
             }
-            title='Shrimp and Chorizo Paella'
-            subheader='September 14, 2016'
+            title={meal.meal}
           />
-          <img style={{height:'200px'}} src={this.props.imgName} />
+          <img style={{ height: '200px' }} src={this.props.imgName} />
           <CardContent>
             <Typography component='p'>
               This impressive paella is a perfect party dish and a fun meal to cook together with
@@ -79,22 +83,11 @@ class Meal extends React.Component {
             </Typography>
           </CardContent>
           <CardActions className={classes.actions} disableActionSpacing>
-            <IconButton aria-label='Add to favorites'>
-              <FavoriteIcon />
-            </IconButton>
-            <IconButton aria-label='Share'>
-              <ShareIcon />
-            </IconButton>
-            <IconButton
-              className={classnames(classes.expand, {
-                [classes.expandOpen]: this.state.expanded
-              })}
-              onClick={this.handleExpandClick}
-              aria-expanded={this.state.expanded}
-              aria-label='Show more'
-            >
-              <ExpandMoreIcon />
-            </IconButton>
+            <Subscribe
+              mealName={meal.meal}
+              userMeals={this.props.userMeals}
+              renderAgain={userInfo => this.props.renderAgain(userInfo)}
+            />
           </CardActions>
         </Card>
       </div>

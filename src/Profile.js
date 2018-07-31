@@ -1,6 +1,7 @@
 // importis
 import React, { Component } from 'react'
 import './Profile.css'
+import img6 from './static/images/cards/img6.jpg'
 
 class Profile extends Component {
   // whole state of the app
@@ -58,10 +59,7 @@ class Profile extends Component {
           <div className='header'>
 
             <a target='_blank' href='#'>
-              <img
-                src='http://lorempixel.com/150/150/people/'
-                className='hoverZoomLink'
-              />
+              <img src={img6} className='hoverZoomLink' />
             </a>
 
             <h1>
@@ -78,7 +76,7 @@ class Profile extends Component {
 
           </div>
 
-          <div class='profile-bio'>
+          <div className='profile-bio'>
 
             <p>
               It takes monumental improvement for us to change how we live our lives. Eat Healthy ! Live Healthy !

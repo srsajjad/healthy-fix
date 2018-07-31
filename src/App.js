@@ -5,21 +5,43 @@ import SignUp from './SignUp'
 import Profile from './Profile'
 import AllMeals from './AllMeals'
 import Method from './Method'
-import { Router, Link } from '@reach/router'
+import { Router, Link, navigate } from '@reach/router'
 
 class App extends Component {
-  state = { userInfo: {} }
+  state = { userInfo: {}, meals: [] }
 
   componentDidMount () {
     let token = localStorage.getItem('token')
-    // console.log('token', token)
+
+    if (token) {
+      window
+        .fetch('http://localhost:1337/profile', {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json, text/plain, */*',
+            'Content-Type': 'application/json',
+            Authorization: 'JWT ' + token
+          }
+        })
+        .then(res => res.json())
+        .then(res => {
+          if (res.status === 'failed') {
+            alert(res.message)
+          } else if (res.status === 'success') {
+            // console.log('response status', res.status)
+            this.setState({
+              userInfo: res.userInfo
+            })
+          }
+        })
+    }
+
     window
-      .fetch('http://localhost:1337/profile', {
+      .fetch('http://localhost:1337/mealplan/meals', {
         method: 'GET',
         headers: {
           Accept: 'application/json, text/plain, */*',
-          'Content-Type': 'application/json',
-          Authorization: 'JWT ' + token
+          'Content-Type': 'application/json'
         }
       })
       .then(res => res.json())
@@ -28,19 +50,23 @@ class App extends Component {
         if (res.status === 'failed') {
           alert(res.message)
         } else if (res.status === 'success') {
-          // console.log('response status', res.status)
+          // console.log('response', res)
           this.setState({
-            userInfo: res.userInfo
+            meals: res.meals
           })
         }
       })
   }
 
   render () {
-    // console.log('final state',this.state)
+    // console.log('final state', this.state)
+
+    // console.log('i was rendered again')
+
     return (
       <div className='App'>
-        <MenuAppBar />
+
+        <MenuAppBar renderAgain={() => this.forceUpdate()} /><br />
 
         {window.localStorage.getItem('token')
           ? <Router>
@@ -48,24 +74,69 @@ class App extends Component {
               topic='update'
               path='/update'
               userInfo={this.state.userInfo}
-              renderAgain={() => this.forceUpdate()}
+              renderAgain={userInfo =>
+                  this.setState({
+                    userInfo: userInfo
+                  })}
               />
-            <Profile
-              path='/profile'
-              userInfo={this.state.userInfo}
+            <Profile path='/profile' userInfo={this.state.userInfo} />
+            <AllMeals
+              path='/allmeals'
+              meals={this.state.meals}
+              userMeals={
+                  this.state.userInfo['meals'] ? this.state.userInfo.meals : []
+                }
+              renderAgain={userInfo =>
+                  this.setState({
+                    userInfo: userInfo
+                  })}
               />
-            <AllMeals path='/allmeals' />
             <Method path='/method' />
-            <AllMeals path='/' />
+            <AllMeals
+              path='/'
+              meals={
+                  this.state.userInfo['meals']
+                    ? this.state.meals.filter(n =>
+                        this.state.userInfo['meals'].includes(n.meal)
+                      )
+                    : []
+                }
+              userMeals={
+                  this.state.userInfo['meals'] ? this.state.userInfo.meals : []
+                }
+              renderAgain={userInfo =>
+                  this.setState({
+                    userInfo: userInfo
+                  })}
+              />
           </Router>
           : <Router>
             <SignUp
               topic='signup'
               path='/signup'
-              renderAgain={() => this.forceUpdate()}
+              renderAgain={userInfo =>
+                  this.setState({
+                    userInfo: userInfo
+                  })}
               />
-            <Login path='/login' renderAgain={() => this.forceUpdate()} />
-            <Login path='/' renderAgain={() => this.forceUpdate()} />
+            <Login
+              path='/login'
+              renderAgain={userInfo => {
+                this.setState({
+                  userInfo: userInfo
+                })
+                setTimeout(() => this.forceUpdate(), 300)
+              }}
+              />
+            <Login
+              path='/'
+              renderAgain={userInfo => {
+                this.setState({
+                  userInfo: userInfo
+                })
+                setTimeout(() => this.forceUpdate(), 300)
+              }}
+              />
           </Router>}
 
       </div>
