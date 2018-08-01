@@ -59,7 +59,7 @@ class SignUp extends PureComponent {
 
   render () {
     const { classes, navigate, topic } = this.props
-    console.log('state inside signup', this.state)
+    // console.log('state inside signup', this.state)
     return (
       <div>
         <Card

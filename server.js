@@ -67,9 +67,9 @@ r.connect({ host: 'localhost', port: 28015 }, function (err, conn) {
       name = decoded.name
       password = decoded.password
     }
-    console.log('name', name)
-    console.log('password', password)
-    console.log('token', token)
+    // console.log('name', name)
+    // console.log('password', password)
+    // console.log('token', token)
 
     r
       .db('foodplan')
@@ -204,7 +204,7 @@ r.connect({ host: 'localhost', port: 28015 }, function (err, conn) {
               .update({ name, password, age, loa })
               .run(conn, (err, result) => {
                 if (err) throw err
-                console.log('after updating result')
+                // console.log('after updating result')
                 let token = jwt.sign({ name, password }, process.env.SECRET_KEY)
                 res.json({
                   status: 'success',
@@ -229,9 +229,9 @@ r.connect({ host: 'localhost', port: 28015 }, function (err, conn) {
     let decoded = jwt.verify(token, process.env.SECRET_KEY)
     let name = decoded.name
 
-    console.log('name', name)
-    console.log('meal', meal)
-    console.log('token', token)
+    // console.log('name', name)
+    // console.log('meal', meal)
+    // console.log('token', token)
 
     r
       .db('foodplan')
@@ -314,7 +314,7 @@ r.connect({ host: 'localhost', port: 28015 }, function (err, conn) {
   // meal plan recipes
   app.get('/mealplan/recipe/:meal', (req, res) => {
     let meal = req.params.meal
-    console.log(meal)
+    // console.log(meal)
     r.db('foodplan').table('meals').run(conn, async (err, cursor) => {
       if (err) throw err
       let result = await cursor.toArray()

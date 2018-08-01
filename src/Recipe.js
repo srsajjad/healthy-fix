@@ -28,7 +28,12 @@ class Recipe extends React.Component {
   render () {
     return (
       <div>
-        <Button onClick={this.handleClickOpen}>Health Value Chart</Button>
+        <Button
+          style={{ backgroundColor: '#3f51b5', color: 'white' }}
+          onClick={this.handleClickOpen}
+        >
+          Health Value Chart
+        </Button>
         <Dialog
           open={this.state.open}
           TransitionComponent={Transition}

@@ -249,3 +249,24 @@
 2018-08-01T01:01:38.862694665 82.299947s info: Table 26b4e391-9031-4c63-a895-8354079b38f6: Starting a new Raft election for term 13.
 2018-08-01T01:01:38.962785506 82.400039s info: Table 26b4e391-9031-4c63-a895-8354079b38f6: This server is Raft leader for term 13. Latest log index is 37.
 2018-08-01T01:01:57.877876138 101.315128s warn: Problem when checking for new versions of RethinkDB: HTTP request to update.rethinkdb.com failed.
+2018-08-01T12:45:09.428737070 12.151005s notice: Running rethinkdb 2.3.6 (GCC 7.2.1)...
+2018-08-01T12:45:09.472476196 12.194747s notice: Running on Linux 4.9.77-1-MANJARO x86_64
+2018-08-01T12:45:09.472568779 12.194837s notice: Loading data from directory /home/sajjad/Desktop/food-plan/rethinkdb_data
+2018-08-01T12:45:09.728650397 12.450918s info: Automatically using cache size of 816 MB
+2018-08-01T12:45:09.773884411 12.496152s notice: Listening for intracluster connections on port 29015
+2018-08-01T12:45:10.312068856 13.034337s notice: Listening for client driver connections on port 28015
+2018-08-01T12:45:10.312342869 13.034611s notice: Listening for administrative HTTP connections on port 8080
+2018-08-01T12:45:10.312346595 13.034614s notice: Listening on cluster addresses: 127.0.0.1, 127.0.1.1, ::1
+2018-08-01T12:45:10.312349069 13.034617s notice: Listening on driver addresses: 127.0.0.1, 127.0.1.1, ::1
+2018-08-01T12:45:10.312351833 13.034619s notice: Listening on http addresses: 127.0.0.1, 127.0.1.1, ::1
+2018-08-01T12:45:10.312371855 13.034639s notice: To fully expose RethinkDB on the network, bind to all addresses by running rethinkdb with the `--bind all` command line option.
+2018-08-01T12:45:10.312376310 13.034644s notice: Server ready, "sajjad_pc_evc" 8ff7405d-b43b-4683-829f-c15a11cb4cf5
+2018-08-01T12:45:11.257521447 13.979789s info: Table 26b4e391-9031-4c63-a895-8354079b38f6: Starting a new Raft election for term 14.
+2018-08-01T12:45:11.322690021 14.044958s info: Table 26b4e391-9031-4c63-a895-8354079b38f6: This server is Raft leader for term 14. Latest log index is 40.
+2018-08-01T12:45:11.335962610 14.058231s info: Table 990938ff-9d75-4978-ba18-8a52e78383dc: Starting a new Raft election for term 11.
+2018-08-01T12:45:11.459077835 14.181346s info: Table 990938ff-9d75-4978-ba18-8a52e78383dc: This server is Raft leader for term 11. Latest log index is 29.
+2018-08-01T13:29:06.623383872 2649.345652s notice: Server got SIGINT from pid 0, uid 0; shutting down...
+2018-08-01T13:29:06.623514865 2649.345783s notice: Shutting down client connections...
+2018-08-01T13:29:06.623636168 2649.345904s notice: All client connections closed.
+2018-08-01T13:29:06.623644748 2649.345912s notice: Shutting down storage engine... (This may take a while if you had a lot of unflushed data in the writeback cache.)
+2018-08-01T13:29:06.678868026 2649.401136s notice: Storage engine shut down.

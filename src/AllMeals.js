@@ -28,16 +28,30 @@ class AllMeals extends Component {
     let imageArr = [img1, img2, img3, img4, img5, img6]
     return (
       <div className='card-parent'>
-        {this.props.meals.length > 0 &&
-          this.props.meals.map((n, i) => (
+        {this.props.meals.length > 0
+          ? this.props.meals.map((n, i) => (
             <Meal
               navigate={this.props.navigate}
               meal={n}
               imgName={imageArr[i]}
               userMeals={this.props.userMeals}
               renderAgain={userInfo => this.props.renderAgain(userInfo)}
-            />
-          ))}
+              />
+            ))
+          : <div>
+            <h1 style={{ fontWeight: 'bold' }}>No Food Plan Is Subscribed</h1>
+            {' '}
+            <p
+              onClick={() => this.props.navigate('/allmeals')}
+              style={{
+                color: '#3f51b5',
+                cursor: 'pointer',
+                fontWeight: 'bold'
+              }}
+              >
+                Go To All Meal Plan List
+              </p>
+          </div>}
       </div>
     )
   }
