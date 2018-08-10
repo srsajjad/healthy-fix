@@ -53,7 +53,7 @@ r.connect({ host: 'localhost', port: 28015 }, function (err, conn) {
 
   // log in
   app.post('/auth/login', (req, res) => {
-    console.log('login flow was hit')
+    // console.log('login flow was hit')
     let token, name, password
     req.get('Authorization')
       ? (token = req.get('Authorization').split(' ')[1])
@@ -81,7 +81,7 @@ r.connect({ host: 'localhost', port: 28015 }, function (err, conn) {
       .run(conn, async (err, cursor) => {
         if (err) throw err
         let result = await cursor.toArray()
-        console.log('result', result[0])
+        // console.log('result', result[0])
         if (result[0] && result[0].name && result[0].password) {
           res.json({
             status: 'success',
@@ -130,7 +130,7 @@ r.connect({ host: 'localhost', port: 28015 }, function (err, conn) {
 
     let decoded = jwt.verify(token, process.env.SECRET_KEY)
     name = decoded.name
-    console.log('name', name)
+    // console.log('name', name)
 
     r
       .db('foodplan')
@@ -318,7 +318,7 @@ r.connect({ host: 'localhost', port: 28015 }, function (err, conn) {
     r.db('foodplan').table('meals').run(conn, async (err, cursor) => {
       if (err) throw err
       let result = await cursor.toArray()
-      console.log('result', result)
+      // console.log('result', result)
       if (result[0]) {
         let fltr = result.filter(n => n.meal === meal)
         // console.log(fltr)
