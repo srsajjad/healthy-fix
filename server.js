@@ -7,7 +7,7 @@ let r = require('rethinkdb')
 var jwt = require('jsonwebtoken')
 require('dotenv').config()
 
-// app.use(express.static('public'))
+// middlewares
 app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -202,7 +202,7 @@ r.connect({ host: 'localhost', port: 28015 }, function (err, conn) {
               .table('users')
               .get(id)
               .update({ name, password, age, loa })
-              .run(conn, (err, result) => {
+              .run(conn, (err, cursor) => {
                 if (err) throw err
                 // console.log('after updating result')
                 let token = jwt.sign({ name, password }, process.env.SECRET_KEY)
@@ -248,7 +248,7 @@ r.connect({ host: 'localhost', port: 28015 }, function (err, conn) {
             .table('users')
             .get(result[0].id)
             .update({ meals: Array.from(new Set([...result[0].meals, meal])) })
-            .run(conn, (err, result) => {
+            .run(conn, (err, cursor) => {
               if (err) throw err
               res.json({
                 status: 'success',
@@ -295,42 +295,20 @@ r.connect({ host: 'localhost', port: 28015 }, function (err, conn) {
                 new Set(result[0].meals.filter(n => n !== meal))
               )
             })
-            .run(conn, (err, result) => {
+            .run(conn, (err, cursor) => {
               if (err) throw err
               res.json({
                 status: 'success',
                 message: 'unsubscribed to mealplan successfully'
               })
             })
-        }else {
+        } else {
           res.json({
             status: 'failed',
             message: 'Could Not Unsubscribe'
           })
         }
       })
-  })
-
-  // meal plan recipes
-  app.get('/mealplan/recipe/:meal', (req, res) => {
-    let meal = req.params.meal
-    // console.log(meal)
-    r.db('foodplan').table('meals').run(conn, async (err, cursor) => {
-      if (err) throw err
-      let result = await cursor.toArray()
-      // console.log('result', result)
-      if (result[0]) {
-        let fltr = result.filter(n => n.meal === meal)
-        // console.log(fltr)
-        let recipe = fltr[0].recipes
-        res.json({
-          status: 'success',
-          recipe
-        })
-      } else {
-        res.json({ status: 'failed', message: 'data not found' })
-      }
-    })
   })
 
   // all meal plans
@@ -348,8 +326,156 @@ r.connect({ host: 'localhost', port: 28015 }, function (err, conn) {
       }
     })
   })
-})
 
+  // meal plan recipes
+  app.get('/mealplan/recipe/:meal', (req, res) => {
+    let meal = req.params.meal
+    // console.log('meal', meal)
+    r
+      .db('foodplan')
+      .table('meals')
+      .filter({ meal })
+      .run(conn, async (err, cursor) => {
+        if (err) throw err
+        let result = await cursor.toArray()
+        // console.log('result', result)
+        if (result[0]) {
+          let recipes = result[0].recipes
+          res.json({
+            status: 'success',
+            recipes
+          })
+        } else {
+          res.json({ status: 'failed', message: 'data not found' })
+        }
+      })
+  })
+
+  // get recipe by recipeKey
+  app.get('/recipe/:recipeKey', (req, res) => {
+    let recipeKey = req.params.recipeKey
+    // console.log('recipe key', recipeKey)
+    r
+      .db('foodplan')
+      .table('recipe')
+      .filter({ recipeKey })
+      .run(conn, async (err, cursor) => {
+        if (err) throw err
+        let result = await cursor.toArray()
+        // console.log('result', result)
+        if (result[0]) {
+          let recipeText = result[0].recipeText
+          res.json({
+            status: 'success',
+            recipeText
+          })
+        } else {
+          res.json({
+            status: 'failed',
+            message: 'Recipe Not Found. Add Recipe !'
+          })
+        }
+      })
+  })
+
+  // add recipe for speicific meal
+  app.post('/mealplan/recipe', (req, res) => {
+    let { secretKey, mealName, recipeKey, recipeText } = req.body
+
+    if (secretKey === 'foodie123') {
+      r
+        .db('foodplan')
+        .table('meals')
+        .filter({ meal: mealName })
+        .run(conn, async (err, cursor) => {
+          if (err) throw err
+          let result = await cursor.toArray()
+          // console.log('result', result)
+          if (result[0]) {
+            let whichMeal = result[0]
+            if (whichMeal) {
+              // let whichRecipeKey = whichMeal.recipeKey
+              let recipeArr = whichMeal.recipes
+              // console.log('recipeArr', recipeArr)
+
+              if (!recipeArr.includes(recipeKey)) {
+                // append a new recipeKey to the meals table recipe array
+
+                console.log('i am inside')
+                let newRecipeKey =
+                  whichMeal.meal[0].toLowerCase() + (recipeArr.length + 1)
+
+                console.log('new recipe key', newRecipeKey)
+
+                r
+                  .db('foodplan')
+                  .table('meals')
+                  .get(whichMeal.id)
+                  .update({
+                    recipes: Array.from(new Set([...recipeArr, newRecipeKey]))
+                  })
+                  .run(conn, (err, cursor) => {
+                    if (err) throw err
+                    // insert recipe into database
+                    r
+                      .db('foodplan')
+                      .table('recipe')
+                      .insert({ recipeKey: newRecipeKey, recipeText })
+                      .run(conn, (err, cursor) => {
+                        if (err) throw err
+                        res.json({
+                          status: 'success',
+                          message: 'Added New Recipe Key And Recipe Successfully !'
+                        })
+                      })
+                  })
+              } else {
+                // update recipe inside database
+                r
+                  .db('foodplan')
+                  .table('recipe')
+                  .filter({ recipeKey })
+                  .run(conn, async (err, cursor) => {
+                    if (err) throw err
+                    let resultIn = await cursor.toArray()
+                    // console.log('resujltIn', resultIn)
+                    if (resultIn[0]) {
+                      r
+                        .db('foodplan')
+                        .table('recipe')
+                        .filter({ recipeKey })
+                        .update({ recipeText })
+                        .run(conn, (err, cursor) => {
+                          if (err) throw err
+                          res.json({
+                            status: 'success',
+                            message: 'Updated Recipe Successfully !'
+                          })
+                        })
+                    } else {
+                      // insert
+                      r
+                        .db('foodplan')
+                        .table('recipe')
+                        .insert({ recipeKey, recipeText })
+                        .run(conn, (err, cursor) => {
+                          if (err) throw err
+                          res.json({
+                            status: 'success',
+                            message: 'Added Recipe Successfully !'
+                          })
+                        })
+                    }
+                  })
+              }
+            }
+          }
+        })
+    } else {
+      res.json({ status: 'falseKey', message: 'Wrong Admin Key' })
+    }
+  })
+})
 app.listen(1337, () => console.log('listening to the port 1337'))
 
 // [

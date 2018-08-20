@@ -5,6 +5,7 @@ import SignUp from './SignUp'
 import Profile from './Profile'
 import AllMeals from './AllMeals'
 import Method from './Method'
+import Admin from './Admin'
 import { Router, Link, navigate } from '@reach/router'
 
 class App extends Component {
@@ -67,6 +68,7 @@ class App extends Component {
       <div className='App'>
 
         <MenuAppBar renderAgain={() => this.forceUpdate()} /><br />
+        <Router><Admin path='/admin' meals={this.state.meals} /></Router>
 
         {window.localStorage.getItem('token')
           ? <Router>
