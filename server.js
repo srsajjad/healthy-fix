@@ -13,9 +13,33 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
 let conn = null
-r.connect({ host: 'localhost', port: 28015 }, function (err, conn) {
+
+r.connect({ host: 'localhost', port: 28015 }, async function (err, conn) {
   if (err) throw err
   conn = conn
+
+  // r.dbList().run(conn, async(err, cursor)=>{
+  //   if (err) throw err
+  //   console.log('whats this', cursor)
+  //   console.log('tyoe', typeof cursor)
+  // })
+
+  let dbList = await r.dbList().run(conn)
+  console.log('dbList', dbList)
+
+  if (!dbList.includes('foodplan')) {
+    let created = await r.dbCreate('foodplan').run(conn)
+    console.log('created', created)
+  }
+
+  let tableList = await r.db('foodplan').tableList().run(conn)
+  console.log('table list', tableList)
+  ;[('meals', 'recipe', 'users', 'tokenList')].forEach(async n => {
+    if (!tableList.includes(n)) {
+      let createdTable = await r.db('foodplan').tableCreate(n).run(conn)
+      console.log('created table', createdTable)
+    }
+  })
 
   // sign up
   app.post('/auth/signup', (req, res) => {
@@ -322,7 +346,53 @@ r.connect({ host: 'localhost', port: 28015 }, function (err, conn) {
           meals: result.map(n => n)
         })
       } else {
-        res.json({ status: 'failed', message: 'data not found' })
+        r
+          .db('foodplan')
+          .table('meals')
+          .insert([
+            {
+              meal: 'Dairy Free',
+              recipes: ['d1', 'd2', 'd3']
+            },
+            {
+              meal: 'Ketogenic',
+              recipes: ['k1', 'k2', 'k3']
+            },
+            {
+              meal: 'Vegan',
+              recipes: ['v1', 'v2', 'v3']
+            },
+            {
+              meal: 'Paleo',
+              recipes: ['p1', 'p2', 'p3']
+            },
+            {
+              meal: 'Moderate Low Carb',
+              recipes: ['m1', 'm2', 'm3']
+            },
+            {
+              meal: 'Intermittent Fasting',
+              recipes: ['i1', 'i2', 'i3']
+            }
+          ])
+          .run(conn, (err, cursor) => {
+            if (err) throw err
+            r.db('foodplan').table('meals').run(conn, async (err, cursor) => {
+              if (err) throw err
+              let result = await cursor.toArray()
+              if (result[0]) {
+                res.json({
+                  status: 'success',
+                  meals: result.map(n => n)
+                })
+              } else {
+                res.json({
+                  status: 'failed',
+                  message: 'data not found'
+                })
+              }
+            })
+          })
       }
     })
   })
@@ -475,7 +545,22 @@ r.connect({ host: 'localhost', port: 28015 }, function (err, conn) {
       res.json({ status: 'falseKey', message: 'Wrong Admin Key' })
     }
   })
+
+  // get all recipes
+  app.get('/recipe', (req, res) => {
+    r.db('foodplan').table('recipe').run(conn, async (err, cursor) => {
+      if (err) throw err
+      let result = await cursor.toArray()
+      // console.log('result', result)
+      if (result[0]) {
+        res.json({ status: 'success', allRecipes: result })
+      } else {
+        res.json({ status: 'failed', message: 'not found' })
+      }
+    })
+  })
 })
+
 app.listen(1337, () => console.log('listening to the port 1337'))
 
 // [

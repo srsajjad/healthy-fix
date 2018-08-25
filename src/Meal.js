@@ -68,8 +68,8 @@ class Meal extends React.Component {
               <IconButton>
                 <MoreVertIcon
                   onClick={() => {
-                    console.log('i was clicked')
-                    navigate('/method')
+                    // console.log('i was clicked')
+                    navigate(`/method/${meal.meal}`)
                   }}
                 />
               </IconButton>

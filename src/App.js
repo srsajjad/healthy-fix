@@ -5,38 +5,37 @@ import SignUp from './SignUp'
 import Profile from './Profile'
 import AllMeals from './AllMeals'
 import Method from './Method'
-import Admin from './Admin'
+import AdminRecipe from './AdminRecipe'
+import AdminMeal from './AdminMeal'
 import { Router, Link, navigate } from '@reach/router'
 
 class App extends Component {
-  state = { userInfo: {}, meals: [] }
+  state = { userInfo: {}, meals: [], allRecipes: [] }
 
-  componentDidMount () {
-    let token = localStorage.getItem('token')
+  fetchUsers = token => {
+    window
+      .fetch('http://localhost:1337/profile', {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json, text/plain, */*',
+          'Content-Type': 'application/json',
+          Authorization: 'JWT ' + token
+        }
+      })
+      .then(res => res.json())
+      .then(res => {
+        if (res.status === 'failed') {
+          alert(res.message)
+        } else if (res.status === 'success') {
+          // console.log('response status', res.status)
+          this.setState({
+            userInfo: res.userInfo
+          })
+        }
+      })
+  }
 
-    if (token) {
-      window
-        .fetch('http://localhost:1337/profile', {
-          method: 'GET',
-          headers: {
-            Accept: 'application/json, text/plain, */*',
-            'Content-Type': 'application/json',
-            Authorization: 'JWT ' + token
-          }
-        })
-        .then(res => res.json())
-        .then(res => {
-          if (res.status === 'failed') {
-            alert(res.message)
-          } else if (res.status === 'success') {
-            // console.log('response status', res.status)
-            this.setState({
-              userInfo: res.userInfo
-            })
-          }
-        })
-    }
-
+  fetchMeals = () => {
     window
       .fetch('http://localhost:1337/mealplan/meals', {
         method: 'GET',
@@ -59,16 +58,51 @@ class App extends Component {
       })
   }
 
+  fetchRecipe = () => {
+    window
+      .fetch('http://localhost:1337/recipe', {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json, text/plain, */*',
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(res => res.json())
+      .then(res => {
+        // console.dir(res)
+        if (res.status === 'failed') {
+          alert(res.message)
+        } else if (res.status === 'success') {
+          console.log('recipe array response', res)
+          this.setState({
+            allRecipes: res.allRecipes
+          })
+        }
+      })
+  }
+
+  componentDidMount () {
+    let token = localStorage.getItem('token')
+    if (token) this.fetchUsers(token)
+    this.fetchMeals()
+    this.fetchRecipe()
+  }
+
   render () {
-    // console.log('final state', this.state)
-
-    // console.log('i was rendered again')
-
     return (
       <div className='App'>
 
         <MenuAppBar renderAgain={() => this.forceUpdate()} /><br />
-        <Router><Admin path='/admin' meals={this.state.meals} /></Router>
+        <Router>
+          <AdminRecipe
+            updateRecipe={() => this.fetchRecipe()}
+            path='/admin/add-recipe'
+            meals={this.state.meals}
+          />
+        </Router>
+        <Router>
+          <AdminMeal path='/admin/add-meal' meals={this.state.meals} />
+        </Router>
 
         {window.localStorage.getItem('token')
           ? <Router>
@@ -93,7 +127,10 @@ class App extends Component {
                     userInfo: userInfo
                   })}
               />
-            <Method path='/method' />
+            <Method
+              path='/method/:mealName'
+              allRecipes={this.state.allRecipes}
+              />
             <AllMeals
               path='/'
               meals={

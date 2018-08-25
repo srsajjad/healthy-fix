@@ -22,10 +22,20 @@
     box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
 }
 
-.paper-parent{
-    width: 500px;
+.paper-parent {
     position: absolute;
     left: 50%;
-    top: 130%;
-    transform: translate(-50%,-50%);
+    transform: translate(-50%, 0%);
+}
+
+.paper {
+    max-width: 600px;
+    overflow-x: auto;
+}
+
+@media only screen and (max-width: 600px) {
+    .paper {
+        max-width: 300px;
+        overflow-x: auto;
+    }
 }

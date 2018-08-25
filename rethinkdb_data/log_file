@@ -424,3 +424,64 @@
 2018-08-21T01:47:37.419627160 5103.663638s notice: All client connections closed.
 2018-08-21T01:47:37.419707039 5103.663718s notice: Shutting down storage engine... (This may take a while if you had a lot of unflushed data in the writeback cache.)
 2018-08-21T01:47:37.644139671 5103.888151s notice: Storage engine shut down.
+2018-08-21T15:17:15.208611327 0.191179s notice: Running rethinkdb 2.3.6 (GCC 7.2.1)...
+2018-08-21T15:17:15.249206128 0.231788s notice: Running on Linux 4.9.77-1-MANJARO x86_64
+2018-08-21T15:17:15.249481546 0.232049s notice: Loading data from directory /home/sajjad/Desktop/food-plan/rethinkdb_data
+2018-08-21T15:17:15.676561681 0.659129s info: Automatically using cache size of 656 MB
+2018-08-21T15:17:15.718753146 0.701320s notice: Listening for intracluster connections on port 29015
+2018-08-21T15:17:16.379400883 1.361968s notice: Listening for client driver connections on port 28015
+2018-08-21T15:17:16.379588629 1.362156s notice: Listening for administrative HTTP connections on port 8080
+2018-08-21T15:17:16.379698017 1.362265s notice: Listening on cluster addresses: 127.0.0.1, 127.0.1.1, ::1
+2018-08-21T15:17:16.379701212 1.362268s notice: Listening on driver addresses: 127.0.0.1, 127.0.1.1, ::1
+2018-08-21T15:17:16.379704191 1.362271s notice: Listening on http addresses: 127.0.0.1, 127.0.1.1, ::1
+2018-08-21T15:17:16.379707507 1.362274s notice: To fully expose RethinkDB on the network, bind to all addresses by running rethinkdb with the `--bind all` command line option.
+2018-08-21T15:17:16.379710863 1.362278s notice: Server ready, "sajjad_pc_evc" 8ff7405d-b43b-4683-829f-c15a11cb4cf5
+2018-08-21T15:17:17.214031213 2.196599s info: Table 26b4e391-9031-4c63-a895-8354079b38f6: Starting a new Raft election for term 21.
+2018-08-21T15:17:17.425738531 2.408306s info: Table 990938ff-9d75-4978-ba18-8a52e78383dc: Starting a new Raft election for term 18.
+2018-08-21T15:17:17.737466043 2.720034s info: Table 26b4e391-9031-4c63-a895-8354079b38f6: This server is Raft leader for term 21. Latest log index is 60.
+2018-08-21T15:17:18.168672302 3.151240s info: Table edc48a27-3cab-44ff-96c2-d19a40b49fe7: Starting a new Raft election for term 7.
+2018-08-21T15:17:18.481558394 3.464126s info: Table 990938ff-9d75-4978-ba18-8a52e78383dc: This server is Raft leader for term 18. Latest log index is 51.
+2018-08-21T15:17:18.526197340 3.508765s info: Table edc48a27-3cab-44ff-96c2-d19a40b49fe7: This server is Raft leader for term 7. Latest log index is 17.
+2018-08-21T18:21:16.392121155 11041.374688s warn: Some RethinkDB data on this server has been placed into swap memory. This may impact performance.
+2018-08-21T22:16:35.962030683 25002.095908s notice: Removing file /home/sajjad/Desktop/food-plan/rethinkdb_data/990938ff-9d75-4978-ba18-8a52e78383dc
+2018-08-21T22:16:35.962039621 25002.095917s info: Table 990938ff-9d75-4978-ba18-8a52e78383dc: Deleted the table.
+2018-08-21T22:16:42.598642289 25008.732520s info: Table 2c5530b4-6e03-44f0-9f3d-e6275c668750: Starting a new Raft election for term 1.
+2018-08-21T22:16:42.598778157 25008.732656s info: Table 2c5530b4-6e03-44f0-9f3d-e6275c668750: Added replica on this server.
+2018-08-21T22:16:42.776623513 25008.910501s info: Table 2c5530b4-6e03-44f0-9f3d-e6275c668750: This server is Raft leader for term 1. Latest log index is 0.
+2018-08-22T00:05:55.305807127 31561.439685s warn: Some RethinkDB data on this server has been placed into swap memory. This may impact performance.
+2018-08-22T01:23:55.277820816 36241.411700s warn: Some RethinkDB data on this server has been placed into swap memory. This may impact performance.
+2018-08-22T03:10:55.285691165 42661.419569s warn: Some RethinkDB data on this server has been placed into swap memory. This may impact performance.
+2018-08-22T03:16:41.420392650 43007.554270s notice: Server got SIGINT from pid 0, uid 0; shutting down...
+2018-08-22T03:16:41.426869809 43007.560747s notice: Shutting down client connections...
+2018-08-22T03:16:41.427109275 43007.560987s notice: All client connections closed.
+2018-08-22T03:16:41.427113820 43007.560991s notice: Shutting down storage engine... (This may take a while if you had a lot of unflushed data in the writeback cache.)
+2018-08-22T03:16:41.580607004 43007.714484s notice: Storage engine shut down.
+2018-08-25T13:26:20.357754837 0.545313s notice: Running rethinkdb 2.3.6 (GCC 7.2.1)...
+2018-08-25T13:26:20.396692727 0.584254s notice: Running on Linux 4.9.77-1-MANJARO x86_64
+2018-08-25T13:26:20.396783095 0.584341s notice: Loading data from directory /home/sajjad/Desktop/food-plan/rethinkdb_data
+2018-08-25T13:26:21.991685820 2.179244s info: Automatically using cache size of 410 MB
+2018-08-25T13:26:22.167095538 2.354654s notice: Listening for intracluster connections on port 29015
+2018-08-25T13:26:23.283296183 3.470855s notice: Listening for client driver connections on port 28015
+2018-08-25T13:26:23.283717415 3.471276s notice: Listening for administrative HTTP connections on port 8080
+2018-08-25T13:26:23.283725478 3.471284s notice: Listening on cluster addresses: 127.0.0.1, 127.0.1.1, ::1
+2018-08-25T13:26:23.283730698 3.471289s notice: Listening on driver addresses: 127.0.0.1, 127.0.1.1, ::1
+2018-08-25T13:26:23.283736167 3.471294s notice: Listening on http addresses: 127.0.0.1, 127.0.1.1, ::1
+2018-08-25T13:26:23.283746053 3.471304s notice: To fully expose RethinkDB on the network, bind to all addresses by running rethinkdb with the `--bind all` command line option.
+2018-08-25T13:26:23.283751008 3.471309s notice: Server ready, "sajjad_pc_evc" 8ff7405d-b43b-4683-829f-c15a11cb4cf5
+2018-08-25T13:26:24.202111711 4.389670s info: Table 26b4e391-9031-4c63-a895-8354079b38f6: Starting a new Raft election for term 22.
+2018-08-25T13:26:24.254038066 4.441597s info: Table 26b4e391-9031-4c63-a895-8354079b38f6: This server is Raft leader for term 22. Latest log index is 63.
+2018-08-25T13:26:24.444462585 4.632021s info: Table edc48a27-3cab-44ff-96c2-d19a40b49fe7: Starting a new Raft election for term 8.
+2018-08-25T13:26:24.779686736 4.967245s info: Table edc48a27-3cab-44ff-96c2-d19a40b49fe7: This server is Raft leader for term 8. Latest log index is 20.
+2018-08-25T13:26:24.943920012 5.131479s info: Table 2c5530b4-6e03-44f0-9f3d-e6275c668750: Starting a new Raft election for term 2.
+2018-08-25T13:26:25.340208677 5.527769s info: Table 2c5530b4-6e03-44f0-9f3d-e6275c668750: This server is Raft leader for term 2. Latest log index is 2.
+2018-08-25T15:22:23.334348203 6963.521907s warn: Some RethinkDB data on this server has been placed into swap memory. This may impact performance.
+2018-08-25T16:58:24.688793844 12724.876352s info: Table f429ec30-0ef8-4c5c-a8ec-dccdb6ac7608: Starting a new Raft election for term 1.
+2018-08-25T16:58:24.727680719 12724.915239s info: Table f429ec30-0ef8-4c5c-a8ec-dccdb6ac7608: Added replica on this server.
+2018-08-25T16:58:24.930593423 12725.118152s info: Table f429ec30-0ef8-4c5c-a8ec-dccdb6ac7608: This server is Raft leader for term 1. Latest log index is 0.
+2018-08-25T16:59:59.188378682 12819.375938s info: Table 6b78de49-b99e-45b8-88b5-f73ad034958e: Starting a new Raft election for term 1.
+2018-08-25T16:59:59.203129767 12819.390689s info: Table 6b78de49-b99e-45b8-88b5-f73ad034958e: Added replica on this server.
+2018-08-25T16:59:59.240040946 12819.427600s info: Table 6b78de49-b99e-45b8-88b5-f73ad034958e: This server is Raft leader for term 1. Latest log index is 0.
+2018-08-25T17:00:54.687716996 12874.875278s info: Table fbfc4f6a-a664-4703-90d0-42c65bfc4b49: Starting a new Raft election for term 1.
+2018-08-25T17:00:54.688789198 12874.876349s info: Table fbfc4f6a-a664-4703-90d0-42c65bfc4b49: Added replica on this server.
+2018-08-25T17:00:54.862387174 12875.049946s info: Table fbfc4f6a-a664-4703-90d0-42c65bfc4b49: This server is Raft leader for term 1. Latest log index is 0.
+2018-08-25T17:15:23.297917484 13743.485477s warn: Some RethinkDB data on this server has been placed into swap memory. This may impact performance.
