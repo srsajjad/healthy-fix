@@ -39,3 +39,9 @@
         overflow-x: auto;
     }
 }
+
+@media only screen and (min-width: 800px) {
+    .paper {
+        min-width: 450px;
+    }
+}

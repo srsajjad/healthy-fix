@@ -19,7 +19,7 @@ export default class AdminRecipe extends Component {
     showNewRecipeKey: false,
     secretKey: '',
     barOpen: false,
-    msg: 'WhooHoo!',
+    msg: 'WooHoo!',
     showSpinner: false
   }
 

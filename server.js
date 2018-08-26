@@ -5,12 +5,21 @@ let fs = require('fs')
 let cors = require('cors')
 let r = require('rethinkdb')
 var jwt = require('jsonwebtoken')
+let fetch = require('isomorphic-unfetch')
 require('dotenv').config()
 
 // middlewares
 app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
+
+// firebase setup
+var key = process.env.SERVER_KEY
+var to = 'this is interesting'
+var notification = {
+  title: 'Testing Push Notification',
+  body: `It's Time To Eat`
+}
 
 let conn = null
 
@@ -25,19 +34,30 @@ r.connect({ host: 'localhost', port: 28015 }, async function (err, conn) {
   // })
 
   let dbList = await r.dbList().run(conn)
-  console.log('dbList', dbList)
+  // console.log('dbList', dbList)
 
   if (!dbList.includes('foodplan')) {
     let created = await r.dbCreate('foodplan').run(conn)
-    console.log('created', created)
+    // console.log('created', created)
   }
 
   let tableList = await r.db('foodplan').tableList().run(conn)
-  console.log('table list', tableList)
-  ;[('meals', 'recipe', 'users', 'tokenList')].forEach(async n => {
+  // console.log('table list', tableList)
+  let tableArr = ['meals', 'recipe', 'users', 'tokenList']
+
+  // async function example() {
+  //   for (const n of tableArr) {
+  //     if (!tableList.includes(n)){
+  //       let createdTable = await r.db('foodplan').tableCreate(n).run(conn)
+  //       console.log('created table', createdTable)
+  //     }
+  //   }
+  // }
+
+  tableArr.forEach(async n => {
     if (!tableList.includes(n)) {
       let createdTable = await r.db('foodplan').tableCreate(n).run(conn)
-      console.log('created table', createdTable)
+      // console.log('created table', createdTable)
     }
   })
 
@@ -244,7 +264,7 @@ r.connect({ host: 'localhost', port: 28015 }, async function (err, conn) {
   // subscribe to meal plan
   app.post('/mealplan/subscribe', (req, res) => {
     let token
-    let { meal } = req.body
+    let { meal, time } = req.body
 
     req.get('Authorization')
       ? (token = req.get('Authorization').split(' ')[1])
@@ -278,6 +298,42 @@ r.connect({ host: 'localhost', port: 28015 }, async function (err, conn) {
                 status: 'success',
                 message: 'subscribed to mealplan successfully'
               })
+              setTimeout(() => {
+                // console.log('i am inside settimeout')
+                r
+                  .db('foodplan')
+                  .table('tokenList')
+                  .filter({ userName: name })
+                  .run(conn, async (err, cursor) => {
+                    if (err) throw err
+                    let result = await cursor.toArray()
+                    // console.log('result here', result)
+                    if (result[0]) {
+                      result[0].tokenList.forEach(n => {
+                        fetch('https://fcm.googleapis.com/fcm/send', {
+                          method: 'POST',
+                          headers: {
+                            Authorization: 'key=' + key,
+                            'Content-Type': 'application/json'
+                          },
+                          body: JSON.stringify({
+                            notification: {
+                              title: `It's Time`,
+                              body: `It's Time To Eat Some ${meal} Food`
+                            },
+                            to: n
+                          })
+                        })
+                          .then(function (response) {
+                            // console.log('response after push', response)
+                          })
+                          .catch(function (error) {
+                            console.error(error)
+                          })
+                      })
+                    }
+                  })
+              }, Number(time) * 1000)
             })
         } else {
           res.json({
@@ -452,7 +508,7 @@ r.connect({ host: 'localhost', port: 28015 }, async function (err, conn) {
   app.post('/mealplan/recipe', (req, res) => {
     let { secretKey, mealName, recipeKey, recipeText } = req.body
 
-    if (secretKey === 'foodie123') {
+    if (secretKey === process.env.ADMIN_KEY) {
       r
         .db('foodplan')
         .table('meals')
@@ -471,11 +527,10 @@ r.connect({ host: 'localhost', port: 28015 }, async function (err, conn) {
               if (!recipeArr.includes(recipeKey)) {
                 // append a new recipeKey to the meals table recipe array
 
-                console.log('i am inside')
                 let newRecipeKey =
                   whichMeal.meal[0].toLowerCase() + (recipeArr.length + 1)
 
-                console.log('new recipe key', newRecipeKey)
+                // console.log('new recipe key', newRecipeKey)
 
                 r
                   .db('foodplan')
@@ -558,6 +613,37 @@ r.connect({ host: 'localhost', port: 28015 }, async function (err, conn) {
         res.json({ status: 'failed', message: 'not found' })
       }
     })
+  })
+
+  // save firetokens
+  app.post('/firetoken', (req, res) => {
+    let { userName, fireToken } = req.body
+    r
+      .db('foodplan')
+      .table('tokenList')
+      .filter({ userName })
+      .run(conn, async (err, cursor) => {
+        if (err) throw err
+        let result = await cursor.toArray()
+        // console.log('firebase result', result)
+        if (result[0]) {
+          let tList = result[0].tokenList
+          if (!tList.includes(fireToken)) {
+            r
+              .db('foodplan')
+              .table('tokenList')
+              .filter({ userName })
+              .update({ tokenList: [...tList, fireToken] })
+              .run(conn)
+          }
+        } else {
+          r
+            .db('foodplan')
+            .table('tokenList')
+            .insert({ userName, tokenList: [fireToken] })
+            .run(conn)
+        }
+      })
   })
 })
 

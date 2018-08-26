@@ -83,7 +83,10 @@ class Meal extends React.Component {
               your guests. Add 1 cup of frozen peas along with the mussels, if you like.
             </Typography>
           </CardContent>
-          <CardActions className={classes.actions} disableActionSpacing>
+          <CardActions
+            className={classes.actions}
+            disableActionSpacing
+          >
             <Subscribe
               mealName={meal.meal}
               userMeals={this.props.userMeals}

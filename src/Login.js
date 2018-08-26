@@ -60,24 +60,7 @@ class Login extends PureComponent {
             alert(res.message)
           } else if (res.status === 'success') {
             localStorage.setItem('token', res.token)
-            window
-              .fetch('http://localhost:1337/profile', {
-                method: 'GET',
-                headers: {
-                  Accept: 'application/json, text/plain, */*',
-                  'Content-Type': 'application/json',
-                  Authorization: 'JWT ' + res.token
-                }
-              })
-              .then(res => res.json())
-              .then(res => {
-                if (res.status === 'failed') {
-                  alert(res.message)
-                } else if (res.status === 'success') {
-                  // console.log('response', res)
-                  this.props.renderAgain(res.userInfo)
-                }
-              })
+            this.props.renderAgain(res.token)
           }
         })
     } else {

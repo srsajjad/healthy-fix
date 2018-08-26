@@ -37,11 +37,13 @@ class Subscribe extends React.Component {
 
   state = {
     loading: false,
-    success: false
+    success: false,
+    val: 5
   }
 
   handleButtonClick = e => {
     let target = e.target
+    // console.log('this is the target', target)
     if (!this.state.loading) {
       this.setState(
         {
@@ -62,7 +64,8 @@ class Subscribe extends React.Component {
                   Authorization: 'JWT ' + token
                 },
                 body: JSON.stringify({
-                  meal: meal
+                  meal: meal,
+                  time: this.state.val
                 })
               })
               .then(res => res.json())
@@ -169,6 +172,21 @@ class Subscribe extends React.Component {
           {loading &&
             <CircularProgress size={24} className={classes.buttonProgress} />}
         </div>
+        <input
+          style={{
+            border: '2px solid #e0e0e0',
+            borderRadius: '5px',
+            height: '36px',
+            width: '60px',
+            fontSize: '20px',
+            textAlign: 'center',
+            marginLeft: '50px'
+          }}
+          type='number'
+          min='2'
+          value={this.state.val}
+          onChange={e => this.setState({ val: e.target.value })}
+        />
       </div>
     )
   }

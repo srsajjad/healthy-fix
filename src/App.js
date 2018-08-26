@@ -8,11 +8,23 @@ import Method from './Method'
 import AdminRecipe from './AdminRecipe'
 import AdminMeal from './AdminMeal'
 import { Router, Link, navigate } from '@reach/router'
+import Snackbar from '@material-ui/core/Snackbar'
+import IconButton from '@material-ui/core/IconButton'
+import CloseIcon from '@material-ui/icons/Close'
+
 
 class App extends Component {
-  state = { userInfo: {}, meals: [], allRecipes: [] }
+  state = { userInfo: {}, meals: [], allRecipes: [], barOpen: false, msg: '' }
+
+  handleBarClose = e => {
+    this.setState({
+      barOpen: false
+    })
+  }
 
   fetchUsers = token => {
+    let self = this
+    let { firebase } = this.props
     window
       .fetch('http://localhost:1337/profile', {
         method: 'GET',
@@ -27,10 +39,47 @@ class App extends Component {
         if (res.status === 'failed') {
           alert(res.message)
         } else if (res.status === 'success') {
-          // console.log('response status', res.status)
+          console.log('user info', res.userInfo)
           this.setState({
             userInfo: res.userInfo
           })
+
+          // firebase token
+          ;(async function () {
+            try {
+              let messaging = firebase.messaging()
+              await messaging.requestPermission()
+              console.log('have permission')
+              let token = await messaging.getToken()
+              console.log('token', token)
+
+              // send firebase token to the server
+              window
+                .fetch('http://localhost:1337/firetoken', {
+                  method: 'POST',
+                  headers: {
+                    Accept: 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({
+                    userName: res.userInfo.name,
+                    fireToken: token
+                  })
+                })
+                .then(res => res.json())
+                .then(res => console.log(res))
+
+              messaging.onMessage(payload => {
+                console.log('payload', payload)
+                self.setState({
+                  msg: payload.notification.body,
+                  barOpen: true
+                })
+              })
+            } catch (e) {
+              console.log('error occured', e)
+            }
+          })()
         }
       })
   }
@@ -153,30 +202,47 @@ class App extends Component {
             <SignUp
               topic='signup'
               path='/signup'
-              renderAgain={userInfo =>
-                  this.setState({
-                    userInfo: userInfo
-                  })}
+              renderAgain={token => {
+                this.fetchUsers(token)
+              }}
               />
             <Login
               path='/login'
-              renderAgain={userInfo => {
-                this.setState({
-                  userInfo: userInfo
-                })
-                setTimeout(() => this.forceUpdate(), 300)
+              renderAgain={token => {
+                this.fetchUsers(token)
               }}
               />
             <Login
               path='/'
-              renderAgain={userInfo => {
-                this.setState({
-                  userInfo: userInfo
-                })
-                setTimeout(() => this.forceUpdate(), 300)
+              renderAgain={token => {
+                this.fetchUsers(token)
               }}
               />
           </Router>}
+
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'right'
+          }}
+          open={this.state.barOpen}
+          autoHideDuration={7000}
+          onClose={this.handleBarClose}
+          ContentProps={{
+            'aria-describedby': 'message-id'
+          }}
+          message={<span id='message-id'>{this.state.msg}</span>}
+          action={[
+            <IconButton
+              key='close'
+              aria-label='Close'
+              color='inherit'
+              onClick={this.handleBarClose}
+            >
+              <CloseIcon />
+            </IconButton>
+          ]}
+        />
 
       </div>
     )
